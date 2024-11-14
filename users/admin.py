@@ -7,3 +7,4 @@ from users.models import User
 class UserAdmin(admin.ModelAdmin):
     list_display = ('pk', 'phone', 'email', 'telegram_id', 'city', 'is_active')
     list_filter = ('city', 'is_active')
+    exclude = ('auth_code',)
