@@ -1,0 +1,24 @@
+{% extends 'interface/base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="col-20">
+        <div class="card">
+
+            <a class="btn btn-outline-primary" href="{% url 'interface:user_update' %}" role="button">Редактировать</a>
+
+            <div class="card-body">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <p class="card-text">Телефон: {{user.phone}}</p>
+                <p class="card-text">Email: {{user.email}}</p>
+                <p class="card-text">Город: {{user.city}}</p>
+                <p class="card-text">Ваш пригласительный код: {{user.invite_code}}</p>
+                <p class="card-text">Вы использовали пригласительный код: {{user.referral_code}}</p>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
