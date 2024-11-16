@@ -2,6 +2,9 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">Меню</h5>
     <nav class="ms-5">
         <a class="p-2 btn btn-outline-primary" href="{% url 'interface:index' %}">Главная</a>
+        {% if user.is_superuser %}
+        <a class="p-2 btn btn-outline-primary" href="{% url 'admin:login' %}?next=/admin/">Администратор</a>
+        {% endif %}
         {% if perms.users.view_all_users or user.is_superuser %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'interface:user_list' %}">Пользователи сервиса</a>
         {% endif %}
@@ -9,8 +12,8 @@
         <a class="p-2 btn btn-outline-primary" href="{% url 'interface:user_detail' %}">Мой профиль</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'interface:logout' %}">Выход</a>
         {% else %}
-        <a class="p-2 btn btn-outline-primary" href="{% url 'interface:login' %}">Авторизация</a>
-        <a class="p-2 btn btn-outline-primary" href="{% url 'admin:login' %}?next=/admin/">Администратор</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'interface:login' %}">Регистрация</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'interface:verificat' %}">Авторизация</a>
         {% endif %}
     </nav>
 </div>

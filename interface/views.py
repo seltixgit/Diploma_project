@@ -35,15 +35,17 @@ class UserCreateView(CreateView):
         return_data = {}
 
         form.is_valid()
-        user = form.save()
+        user = form.save(commit=False)  # Не сохраняем сразу в базе
         user.invite_code = generate_invite_code()
         return_data["invite_code"] = user.invite_code
 
         password = random.randint(1000, 9999)
         user.set_password(str(password))
-        user.save()
-        messages.success(self.request, "На указанный Вами номер телефона отправлено SMS с кодом доступа!")
-        time.sleep(3)
+        user.is_active = True  # Устанавливаем пользователя активным
+        user.save()  # Теперь сохраняем в базе
+        messages.success(self.request, f"На указанный Вами номер телефона отправлено SMS с кодом доступа! "
+                                       f"Ваш код доступа: {password}")
+        time.sleep(2)
         print(password)
         return super().form_valid(form)
 
@@ -55,27 +57,29 @@ class UserCreateView(CreateView):
             password = random.randint(1000, 9999)
         user.set_password(str(password))
         user.save()
-        messages.success(self.request, "На указанный Вами номер телефона отправлено SMS с кодом доступа!!")
+        messages.success(self.request, f"На указанный Вами номер телефона отправлено SMS с кодом доступа! "
+                                       f"Ваш код доступа: {password}")
         self.object = user
-        time.sleep(3)
+        time.sleep(2)
         print(password)
         return redirect(self.get_success_url())
 
 
-class AuthCodeForm(View):
+class AuthCodeView(View):
     """Проверка кода из SMS и авторизация пользователя"""
 
     def post(self, *args, **kwargs):
         phone = self.request.POST.get("phone")
         code = self.request.POST.get("code")
-        user = authenticate(self.request, username=phone, password=code)
+        user = authenticate(self.request, phone=phone, password=code)
         if user is not None:
             login(self.request, user)
-            # Redirect to a success page.
+            # Перенаправление на страницу успеха.
             return redirect(reverse("interface:user_detail"))
         else:
-            # Return an 'invalid login' error message.
-            return redirect(reverse("interface:login"))
+            # Возврат сообщения об ошибке неверного входа.
+            messages.error(self.request, "Неверный код или номер телефона. Пожалуйста, попробуйте снова.")
+            return redirect(reverse("interface:verificat"))
 
     def get(self, *args, **kwargs):
         form = AuthCodeForm()

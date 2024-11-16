@@ -15,7 +15,9 @@
                 <p class="card-text">Город: {{user.city}}</p>
                 <p class="card-text">Ваш пригласительный код: {{user.invite_code}}</p>
                 <p class="card-text">Вы использовали пригласительный код: {{user.referral_code}}</p>
-
+                <p class="card-text">Пользователи с вашим пригласительным кодом: {% for ref in referral_list %}</p>
+                <p class="mb-2">{{ref}}<br/></p>
+                {% endfor %}
             </div>
         </div>
 

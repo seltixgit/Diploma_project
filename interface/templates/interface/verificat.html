@@ -7,6 +7,13 @@
             <div class="card">
                 <div class="card-body">
                     {% csrf_token %}
+                    {% if messages %}
+                       <ul class="messages">
+                           {% for message in messages %}
+                               <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                           {% endfor %}
+                       </ul>
+                   {% endif %}
                     <input type="hidden" name="phone" value="{{request.GET.phone}}">
                     {{ form.as_p }}
                 </div>
